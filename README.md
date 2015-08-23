@@ -46,7 +46,7 @@ A: No.
 A: No.
 
 **Q: What is the minimum requirement ?**  
-A: Flash Player 11 and/or Adobe AIR 3 (released October 4, 2011) and/or Redtamarin.
+A: Flash Player 11 and/or Adobe AIR 3 (October 4, 2011) and/or Redtamarin (October 25, 2014).
 
 **Q: Will it work with the Flash Player plugin as a SWF embedded in an HTTML page ?**  
 A: Yes.
