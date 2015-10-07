@@ -1,7 +1,8 @@
 as3-universal-analytics
 =======================
 
-Google Universal Analytics for AS3 (**Flash** / **AIR** / **Redtamarin**).
+Google Universal Analytics for ActionScript 3.0  
+(**Flash** / **AIR** / **Redtamarin**).
 
 For few years people could use [gaforflash](https://code.google.com/p/gaforflash/)
 to [track Flash content with Google Analytics](http://analytics.blogspot.fr/2008/11/want-to-track-adobe-flash-now-you-can.html),
@@ -12,6 +13,8 @@ we can offer the Flash Platform a new library which can cover more specific and 
 
 Simply put, **as3-universal-analytics** is an ActionScript 3 implementation
 of the [Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/).
+
+Please visit the [Wiki Documentation](https://github.com/zwetan/as3-universal-analytics/wiki) to get started.
 
 
 Mission Statement
@@ -24,13 +27,16 @@ Mission Statement
 Status
 ------
 
-The work is in progress, we will keep you posted when it is ready.
+First release: [uanalytics v0.8](https://github.com/zwetan/as3-universal-analytics/releases)
 
-We kept the project in "sleeping mode" for a couple of reasons:
 
-  - make it work server side (eg. EVERYWHERE)
-  - move to Github
-  - code refactor
+
+LICENSE
+-------
+
+The Source Code is subject to the terms of the [Mozilla Public License](https://www.mozilla.org/en-US/MPL/), v. 2.0
+or [MPL2](https://www.mozilla.org/en-US/MPL/2.0/) for short; if you have doubt or questions about this licensing
+please consult the [MPL 2.0 FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/).
 
 
 FAQ
@@ -49,6 +55,9 @@ A: No.
 A: Flash Player 11 and/or Adobe AIR 3 (October 4, 2011) and/or Redtamarin (October 25, 2014).
 
 **Q: Will it work with the Flash Player plugin as a SWF embedded in an HTTML page ?**  
+A: Yes.
+
+**Q: Will it work when I test from Flash CS, Flash CC, Flash Builder, etc. ?**  
 A: Yes.
 
 **Q: Will it work with AIR for mobile (iOS and Android) ?**  

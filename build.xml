@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!--
+    Require min Ant 1.9.1
+ -->
+<project name="as3-universal-analytics" default="main" basedir="."
+    xmlns:if="ant:if"
+    xmlns:unless="ant:unless" >
+    
+    <target name="clean" depends="define">
+        
+        <delete dir="${basedir}/${release.dir}" />
+        <delete dir="${basedir}/${deploy.dir}" />
+        <delete dir="${basedir}/${asdoc.output}" />
+
+        <mkdir dir="${basedir}/${release.dir}" />
+        <mkdir dir="${basedir}/${deploy.dir}" />
+        <mkdir dir="${basedir}/${asdoc.output}" />
+
+    </target>
+
+    <target name="define">
+
+        <!-- override -->
+        <property file="user.properties"/>
+
+        <!-- default -->
+        <property file="build/common.properties"/>
+        
+        <condition property="FLEX_HOME" value="${FLEX_HOME_MAC}">
+            <os family="mac" />
+        </condition>
+
+        <condition property="FLEX_HOME" value="${FLEX_HOME_WIN}">
+            <os family="windows" />
+        </condition>
+
+        <tstamp>
+            <format property="TODAY" pattern="dd MMMM yyyy" />
+            <format property="TODAY_FILE" pattern="Y-MM-dd" />
+        </tstamp>
+
+        <property file="${basedir}/src/version.properties"/>
+        <property file="${basedir}/build/build.properties"/>
+
+        <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+    </target>
+
+    <target name="before" depends="define">
+
+        <!-- debug -->
+        <echo message="properties:" level="verbose" />
+        <echo message="            FLEX_HOME = ${FLEX_HOME}" level="verbose" />
+        <echo message="                TODAY = ${TODAY}" level="verbose" />
+        <echo message="           TODAY_FILE = ${TODAY_FILE}" level="verbose" />
+        <echo message="        Flash version = ${local.flashplayerversion}" level="verbose" />
+        <echo message="          SWF version = ${local.swfversion}" level="verbose" />
+        <echo message="actions:" level="verbose" />
+        <echo message="        documentation = ${build.documentation}" level="verbose" />
+        <echo message="options:" level="verbose" />
+        <echo message="          build.nodoc = ${build.nodoc}" level="verbose" />
+        <echo message="         build.fatswc = ${build.fatswc}" level="verbose" />
+
+    </target>
+
+    <target name="main" depends="before,clean,compile,after">
+    </target>
+
+    <target name="compile">
+        
+        <antcall target="compile-swc" if:true="${build.component}"/>
+
+        <antcall target="compile-abc" if:true="${build.component}"/>
+
+        <antcall target="compile-documentation" if:true="${build.documentation}"/>
+
+        <antcall target="compile-release" if:true="${build.release}"/>
+
+    </target>
+
+    <target name="compile-swc">
+
+        <sequential unless:true="${build.noswc}">
+
+            <compc
+                output="${basedir}/${release.dir}/${project.swc}"
+                target-player="${local.flashplayerversion}"
+                swf-version="${local.swfversion}"
+            >
+                <!-- <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" /> -->
+                <!-- <load-config filename="${basedir}/build/config.xml" append="true" /> -->
+                <load-config filename="${FLEX_HOME}/frameworks/air-config.xml" />
+                <namespace uri="${project.namespace}" manifest="${basedir}/${project.manifest}" />
+                <include-namespaces uri="${project.namespace}" />
+                <strict>true</strict>
+                <optimize>true</optimize>
+                <warnings>true</warnings>
+                <verbose-stacktraces>false</verbose-stacktraces>
+                <compute-digest>false</compute-digest>
+                <!--
+                <external-library-path dir="${basedir}/${project.lib-swc}/" append="true">
+                    <include name="something.swc"/>
+                </external-library-path>
+                 -->
+                <external-library-path dir="${FLEX_HOME}/frameworks/libs/air/" append="true">
+                    <include name="airglobal.swc"/>
+                </external-library-path>
+                <source-path path-element="${basedir}/${project.src}" />
+                <!-- <include-sources dir="${basedir}/${project.src}/libraries/uanalytics" includes="**/*.as" /> -->
+                <include-sources dir="${basedir}/${project.src}/libraries/uanalytics/tracking" includes="**/*.as" />
+                <include-sources dir="${basedir}/${project.src}/libraries/uanalytics/tracker">
+                    <include name="AppTracker.as" />
+                    <include name="ApplicationInfo.as" />
+                    <include name="DataSource.as" />
+                    <include name="DefaultTracker.as" />
+                    <include name="HitType.as" />
+                    <include name="SessionControl.as" />
+                    <include name="SystemInfo.as" />
+                    <include name="TimingInfo.as" />
+                    <include name="WebTracker.as" />
+                </include-sources>
+                <include-sources dir="${basedir}/${project.src}/libraries/uanalytics/tracker/senders">
+                    <include name="TraceHitSender.as" />
+                    <include name="LoaderHitSender.as" />
+                    <include name="DebugHitSender.as" />
+                    <include name="URLLoaderHitSender.as" />
+                    <include name="URLStreamHitSender.as" />
+                </include-sources>
+                <include-sources dir="${basedir}/${project.src}/libraries/uanalytics/tracker/addons">
+                    <include name="DebugSharedObjectStorage.as" />
+                    <include name="Twitter.as" />
+                </include-sources>
+                <include-sources dir="${basedir}/${project.src}/libraries/uanalytics/utils">
+                    <include name="crc32.as" />
+                    <include name="generateAIRAppInfo.as" />
+                    <include name="generateAIRSystemInfo.as" />
+                    <include name="generateFlashSystemInfo.as" />
+                    <include name="generateUUID.as" />
+                    <include name="getAIRScreenColors.as" />
+                    <include name="getAIRUserLanguage.as" />
+                    <include name="getCurrentScreen.as" />
+                    <include name="getDocumentEncoding.as" />
+                    <include name="getFlashVersion.as" />
+                    <include name="getHostname.as" />
+                    <include name="getScreenColors.as" />
+                    <include name="getScreenResolution.as" />
+                    <include name="getUserLanguage.as" />
+                    <include name="getViewportSize.as" />
+                    <include name="isAIR.as" />
+                    <include name="isAIR.as" />
+                </include-sources>
+                <!--
+                <metadata date="${TODAY}" title="${project.name}">
+                    <publisher name="${project.publisher}" />
+                    <creator name="${project.creator}" />
+                </metadata>
+                 -->
+            </compc>
+
+        </sequential>
+
+    </target>
+
+    <target name="compile-abc">
+
+        <sequential unless:true="${build.noabc}">
+
+            <exec executable="redbean" dir="${basedir}" failonerror="true">
+
+            </exec>
+
+            <move file="${basedir}/${project.abc}" todir="${basedir}/${release.dir}" />
+
+        </sequential>
+
+    </target>
+
+    <target name="compile-documentation">
+
+        <sequential unless:true="${build.nodoc}">
+            
+            <asdoc
+                output="${basedir}/${asdoc.output}"
+                templates-path="${basedir}/build/doc/templates/"
+                target-player="${local.flashplayerversion}"
+                swf-version="${local.swfversion}"
+                main-title="${asdoc.main.title}"
+                footer="${asdoc.footer}"
+                window-title="${asdoc.window.title}"
+                left-frameset-width="256"
+                keep-xml="${build.fatswc}"
+                skip-xsl="false"
+                warnings="false"
+                strict="false"
+                failonerror="true"
+                fork="true"
+            >
+                <verbose-stacktraces>true</verbose-stacktraces>
+                <load-config filename="${FLEX_HOME}/frameworks/air-config.xml"/>
+                <doc-sources path-element="${basedir}/${project.src}"/>
+                <source-path path-element="${basedir}/${project.src}" />
+                <external-library-path dir="${FLEX_HOME}/frameworks/libs/air/" append="true">
+                    <include name="airglobal.swc"/>
+                </external-library-path>
+                <external-library-path dir="${basedir}/lib-swc" append="true">
+                    <include name="redtamarin.swc"/>
+                </external-library-path>
+                <exclude-sources path-element="${basedir}/${project.src}/uanalytics.as" />
+                <exclude-sources path-element="${basedir}/${project.src}/UniversalAnalytics.as" />
+                <exclude-sources path-element="${basedir}/${project.src}/UniversalAnalytics2.as" />
+                <exclude-sources path-element="${basedir}/${project.src}/libraries/uanalytics/SimplestTracker.as" />
+                <package-description-file>${basedir}/build/doc/package.description.xml</package-description-file>
+            </asdoc>
+
+            <sequential if:true="${build.fatswc}">
+
+                <!-- update swc with asdoc xml -->
+                <zip destfile="${basedir}/${release.dir}/${project.swc}" update="true">
+                    <zipfileset dir="${basedir}/${asdoc.output}/tempdita" prefix="docs">
+                        <include name="*.xml" />
+                        <include name="*.dita" />
+                        <exclude name="ASDoc_Config.xml" />
+                        <exclude name="overviews.xml" />
+                    </zipfileset>
+                </zip>
+
+            </sequential>
+
+            <delete dir="${basedir}/${asdoc.output}/tempdita" />
+            
+        </sequential>
+
+    </target>
+
+    <target name="compile-release">
+
+        <sequential unless:true="${build.nozip}">
+
+            <!-- generate documentation.zip -->
+            <zip destfile="${basedir}/${release.dir}/documentation.zip"
+                 basedir="${basedir}/${asdoc.output}"
+                 unless:true="${build.nodoc}" />
+
+            <!-- copy all files to deploy dir -->
+            <copy todir="${basedir}/${deploy.dir}">
+                <fileset dir="${basedir}">
+                    <include name="*.txt" />
+                    <include name="*.md" />
+                    <include name="LICENSE" />
+                </fileset>
+                <fileset dir="${basedir}/${release.dir}">
+                    <include name="*.swc" />
+                    <include name="*.abc" />
+                </fileset>
+                <file file="${basedir}/${release.dir}/documentation.zip" unless:true="${build.nodoc}" />
+            </copy>
+
+            <!-- zip all files -->
+            <zip destfile="${basedir}/${deploy.dir}/${project.name}-${project.version}.zip"
+                 basedir="${basedir}/${deploy.dir}" />
+
+            <!-- delete all files except the zip -->
+            <delete includeemptydirs="true">
+                <fileset dir="${basedir}/${deploy.dir}">
+                    <include name="**/*"/>
+                    <exclude name="${project.name}-${project.version}.zip"/>
+                </fileset>
+            </delete>
+
+        </sequential>
+
+    </target>
+
+
+    <target name="after">
+    </target>
+    
+</project>

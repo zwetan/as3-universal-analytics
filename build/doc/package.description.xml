@@ -1,0 +1,115 @@
+<overviews>
+	<all-packages>
+		<description><![CDATA[
+			The &lt;b&gt;as3-universal-analytics&lt;/b&gt; library.&lt;br&gt;
+			&lt;br&gt;
+			An ActionScript 3.0 implementation of the Google Analytics &lt;a href="http://developers.google.com/analytics/devguides/collection/protocol/v1/"&gt;Measurement Protocol&lt;/a&gt;&lt;br&gt;
+			which allow you to:
+			&lt;ul&gt;
+				&lt;li&gt;
+				Measure user activity in new environments.
+				&lt;li&gt;
+				Tie online to offline behavior.
+				&lt;/li&gt;
+				&lt;li&gt;
+				Send data from both the client and server.
+				&lt;/li&gt;
+			&lt;/ul>
+			
+			We support 3 runtimes:
+			&lt;ul&gt;
+				&lt;li&gt;
+				Flash Player plugin&lt;br&gt;
+                to track on the &lt;b&gt;browser&lt;/b&gt;
+                &lt;br&gt;
+                &lt;a href="http://github.com/zwetan/as3-universal-analytics/wiki/trackWithFlash" target="_blank"&gt;Tracking with Flash Player plugin&lt;/a&gt;
+				&lt;/li&gt;
+				&lt;li&gt;
+				AIR (Adobe Integrated Runtime)&lt;br&gt;
+				to track on &lt;b&gt;desktop&lt;/b&gt; and &lt;b&gt;mobile&lt;/b&gt; applications
+                &lt;br&gt;
+                &lt;a href="http://github.com/zwetan/as3-universal-analytics/wiki/trackWithAIR" target="_blank"&gt;Tracking with AIR&lt;/a&gt;
+				&lt;/li&gt;
+				&lt;li&gt;
+				Redtamarin&lt;br&gt;
+				to track on the &lt;b&gt;command-line&lt;/b&gt; and &lt;b&gt;server side&lt;/b&gt;
+                &lt;br&gt;
+                &lt;a href="http://github.com/zwetan/as3-universal-analytics/wiki/trackWithRedtamarin" target="_blank"&gt;Tracking with Redtamarin&lt;/a&gt;
+				&lt;/li&gt;
+			&lt;/ul>
+
+			&lt;a href="https://github.com/zwetan/as3-universal-analytics/wiki" target="_blank"&gt;Wiki Documentation&lt;/a&gt;
+		]]></description>
+	</all-packages>
+	<packages>
+
+		<package name="C.unistd" >
+			<shortDescription><![CDATA[Standard symbolic constants and types.]]></shortDescription>
+			<description><![CDATA[
+				Part of the Portable Operating System Interface library,
+				the library provides access to the POSIX operating system API.&lt;br&gt;
+				&lt;br&gt;
+				see: &lt;a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html" target="_blank"&gt;Opengroup unistd.h&lt;/a&gt;
+				&lt;br&gt;
+				see: &lt;a href="http://en.wikipedia.org/wiki/Unistd.h" target="_blank"&gt;Wikipedia unistd.h&lt;/a&gt;
+				&lt;br&gt;
+				&lt;br&gt;
+				&lt;b&gt;Redtamarin only&lt;/b&gt;
+			]]></description>
+		</package>
+
+		<package name="crypto" >
+			<shortDescription><![CDATA[Cryptography library.]]></shortDescription>
+			<description><![CDATA[
+				The cryptography library (or &lt;b&gt;cryptolib&lt;/b&gt;) contains classes, functions
+				and other definitions that implement various ciphers, hashes, public-key
+				and symmetric-key algorithms.
+				&lt;br&gt;
+				&lt;br&gt;
+				&lt;b&gt;Redtamarin only&lt;/b&gt;
+			]]></description>
+		</package>
+
+		<package name="libraries.uanalytics.tracking" >
+			<shortDescription><![CDATA[Tracking definitions.]]></shortDescription>
+			<description><![CDATA[
+				This is the core logic of the analytics tracking where you will find the
+                constants definitions, the interfaces, the model, the configuration, etc.
+			]]></description>
+		</package>
+		
+		<package name="libraries.uanalytics.tracker" >
+			<shortDescription><![CDATA[Trackers implementations.]]></shortDescription>
+			<description><![CDATA[
+				This is the implementation part where all glue together where you will find
+				helpers like the “infos” classes, the different trackers and senders implementations,
+				and some optional addons.
+			]]></description>
+		</package>
+
+		<package name="libraries.uanalytics.tracker.senders" >
+			<shortDescription><![CDATA[Senders implementations.]]></shortDescription>
+			<description><![CDATA[
+				This is the implementations of the transport part, where we define
+				how a hit request is send to the Google Analytics Servers.
+			]]></description>
+		</package>
+
+		<package name="libraries.uanalytics.tracker.addons" >
+			<shortDescription><![CDATA[Additional implementations.]]></shortDescription>
+			<description><![CDATA[
+				Optional additions to the library, "nice to have" but not necessary to have.
+			]]></description>
+		</package>
+
+		<package name="libraries.uanalytics.utils" >
+			<shortDescription><![CDATA[Utilitarian functions.]]></shortDescription>
+			<description><![CDATA[
+				This is the general utilitarian code that either gather informations
+				depending on the different platforms, provide helpers for unique ID
+				and other CRC generations, etc.
+			]]></description>
+		</package>
+
+	</packages>
+</overviews>

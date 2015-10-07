@@ -1,0 +1,11 @@
+import redbean.*;
+import shell.FileSystem;
+
+compile( "src/uanalytics.as" );
+
+if( FileSystem.exists( "uanalytics.abc" ) )
+{
+	FileSystem.removeFile( "uanalytics.abc" );
+}
+
+FileSystem.move( "src/uanalytics.abc", "uanalytics.abc" );
