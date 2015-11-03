@@ -225,7 +225,17 @@ package libraries.uanalytics.tracker.senders
                 _remoteAddress = a;
             }
             
-            _remotePort = ntohs( _info.ai_addr.sin_port );
+            if( _info.ai_family == AF_INET )
+            {
+                // IPv4
+                _remotePort = ntohs( _info.ai_addr.sin_port );
+            }
+            else
+            {
+                // IPv6
+                _remotePort = ntohs( _info.ai_addr.sin6_port );
+            }
+            
             
             return sockfd;
         }
