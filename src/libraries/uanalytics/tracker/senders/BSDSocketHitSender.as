@@ -242,6 +242,18 @@ package libraries.uanalytics.tracker.senders
         
         private function _findLocalAddressAndPort():void
         {
+            if( _info.ai_family == AF_INET )
+            {
+                _findLocalAddressAndPort4();
+            }
+            else
+            {
+                _findLocalAddressAndPort6();
+            }
+        }
+        
+        private function _findLocalAddressAndPort4():void
+        {
             var addr:sockaddr_in = new sockaddr_in();
             
             var result:int = getsockname( _sockfd, addr );
@@ -264,6 +276,33 @@ package libraries.uanalytics.tracker.senders
                 }
                 
                 _localPort = ntohs( addr.sin_port );
+            }
+        }
+        
+        private function _findLocalAddressAndPort6():void
+        {
+            var addr:sockaddr_in6 = new sockaddr_in6();
+            
+            var result:int = getsockname( _sockfd, addr );
+            if( result == -1 )
+            {
+                var e:CError = new CError( "", errno );
+                if( enableErrorChecking ) { throw e; }
+            }
+            else
+            {
+                var a:String = inet_ntop( addr.sin6_family, addr );
+                if( !a )
+                {
+                    var e:CError = new CError( "", errno );
+                    if( enableErrorChecking ) { throw e; }
+                }
+                else
+                {
+                    _localAddress = a;    
+                }
+                
+                _localPort = ntohs( addr.sin6_port );
             }
         }
         
