@@ -1863,6 +1863,32 @@ package libraries.uanalytics.tracking
                 }
             }
         }
+		
+		/**
+		 * Set multiple field values as specified in the Dictionary 
+		 * for a one time use.
+		 * 
+		 * <p>
+		 * The fields will be consumed on next hit and then will be reset.
+		 * </p>
+		 * 
+		 * @param values field/value pairs to set in the model.
+		 * 
+		 * @playerversion Flash 11
+		 * @playerversion AIR 3.0
+		 * @playerversion AVM 0.4
+		 * @langversion 3.0
+		 */
+		public function addOneTime( values:Dictionary ):void
+		{
+			if( _temporary )
+			{
+				for( var entry:String in values )
+				{
+					setOneTime( entry, values[entry] );
+				}
+			}
+		}
         
         /** @inheritDoc */
         public function send( hitType:String = null, tempValues:Dictionary = null ):Boolean
