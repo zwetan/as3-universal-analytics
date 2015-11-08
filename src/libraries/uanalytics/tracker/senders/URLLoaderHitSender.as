@@ -58,15 +58,6 @@ package libraries.uanalytics.tracker.senders
         protected var _tracker:AnalyticsTracker;
         
         /**
-         * A URLLoader.
-         * 
-         * @playerversion Flash 11
-         * @playerversion AIR 3.0
-         * @langversion 3.0
-         */
-        protected var _loader:URLLoader;
-        
-        /**
          * Creates a URLLoaderHitSender.
          * 
          * @playerversion Flash 11
@@ -77,7 +68,6 @@ package libraries.uanalytics.tracker.senders
         {
             super();
             _tracker = tracker;
-            _loader = new URLLoader();
         }
         
         /**
@@ -86,14 +76,14 @@ package libraries.uanalytics.tracker.senders
          * @playerversion AIR 3.0
          * @langversion 3.0
          */
-        protected function _hookEvents():void
+        protected function _hookEvents(loader:URLLoader):void
         {
-            _loader.addEventListener( Event.OPEN, onOpen );
-            _loader.addEventListener( ProgressEvent.PROGRESS , onProgress );
-            _loader.addEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
-            _loader.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
-            _loader.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
-            _loader.addEventListener( Event.COMPLETE, onComplete );
+            loader.addEventListener( Event.OPEN, onOpen );
+            loader.addEventListener( ProgressEvent.PROGRESS , onProgress );
+            loader.addEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
+            loader.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+            loader.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
+            loader.addEventListener( Event.COMPLETE, onComplete );
         }
         
         /**
@@ -102,14 +92,14 @@ package libraries.uanalytics.tracker.senders
          * @playerversion AIR 3.0
          * @langversion 3.0
          */
-        protected function _unhookEvents():void
+        protected function _unhookEvents(loader:URLLoader):void
         {
-            _loader.removeEventListener( Event.OPEN, onOpen );
-            _loader.removeEventListener( ProgressEvent.PROGRESS , onProgress );
-            _loader.removeEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
-            _loader.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
-            _loader.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
-            _loader.removeEventListener( Event.COMPLETE, onComplete );
+            loader.removeEventListener( Event.OPEN, onOpen );
+            loader.removeEventListener( ProgressEvent.PROGRESS , onProgress );
+            loader.removeEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
+            loader.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+            loader.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
+            loader.removeEventListener( Event.COMPLETE, onComplete );
         }
         
         /**
@@ -159,7 +149,7 @@ package libraries.uanalytics.tracker.senders
             /* Note:
                An error occured and so we want to unhook all our events
             */
-            _unhookEvents();
+            _unhookEvents(event.target as URLLoader);
         }
         
         /**
@@ -173,7 +163,7 @@ package libraries.uanalytics.tracker.senders
             /* Note:
                An error occured and so we want to unhook all our events
             */
-            _unhookEvents();
+            _unhookEvents(event.target as URLLoader);
         }
         
         /**
@@ -187,7 +177,7 @@ package libraries.uanalytics.tracker.senders
             /* Note:
                We are done and so we want to unhook all our events
             */
-            _unhookEvents();
+            _unhookEvents(event.target as URLLoader);
         }
         
         /** @inheritDoc */
@@ -219,7 +209,7 @@ package libraries.uanalytics.tracker.senders
             }
             
             var request:URLRequest = new URLRequest();
-                request.url = url;
+            request.url = url;
             
             if( sendViaPOST )
             {
@@ -230,18 +220,20 @@ package libraries.uanalytics.tracker.senders
                 request.method = URLRequestMethod.GET;
             }
             
-                request.data = payload;
+            request.data = payload;
             
-            _hookEvents();
+            const loader:URLLoader = new URLLoader();
+            
+            _hookEvents(loader);
             var err:* = null;
             
             try
             {
-                _loader.load( request );
+                loader.load( request );
             }
             catch( e:Error )
             {
-                _unhookEvents();
+                _unhookEvents(loader);
                 //trace( "unable to load requested page." );
                 //trace( "Error: " + e.message );
                 err = e;
