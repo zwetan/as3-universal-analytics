@@ -367,7 +367,7 @@ package libraries.uanalytics.tracker.senders
             try
             {
                 // we send the request
-				loader.load( request );
+                loader.load( request );
             }
             catch( e:IOError )
             {
