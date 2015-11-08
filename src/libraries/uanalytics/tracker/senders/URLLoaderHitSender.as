@@ -209,7 +209,7 @@ package libraries.uanalytics.tracker.senders
             }
             
             var request:URLRequest = new URLRequest();
-                request.url = url;
+            request.url = url;
             
             if( sendViaPOST )
             {
@@ -222,14 +222,14 @@ package libraries.uanalytics.tracker.senders
             
             request.data = payload;
             
-			const loader:URLLoader = new URLLoader();
-			
+            const loader:URLLoader = new URLLoader();
+            
             _hookEvents(loader);
             var err:* = null;
             
             try
             {
-				loader.load( request );
+                loader.load( request );
             }
             catch( e:Error )
             {

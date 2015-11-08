@@ -150,7 +150,7 @@ package libraries.uanalytics.tracker.senders
             }
             
             var request:URLRequest = new URLRequest();
-                request.url = url;
+            request.url = url;
             
             if( sendViaPOST )
             {
@@ -163,14 +163,14 @@ package libraries.uanalytics.tracker.senders
             
             request.data = payload;
             
-			const loader:URLStream = new URLStream();
-			
+            const loader:URLStream = new URLStream();
+            
             _hookEvents(loader);
             var err:* = null;
             
             try
             {
-				loader.load( request );
+                loader.load( request );
             }
             catch( e:ArgumentError )
             {

@@ -48,8 +48,8 @@ package libraries.uanalytics.tracker.senders
         
         protected override function onComplete( event:Event ):void
         {
-			const loader:URLLoader = event.target as URLLoader;
-			
+            const loader:URLLoader = event.target as URLLoader;
+            
             trace( "onLoaderComplete()" );
             _unhookEvents(loader);
             
@@ -104,7 +104,7 @@ package libraries.uanalytics.tracker.senders
             }
             
             var request:URLRequest = new URLRequest();
-                request.url = url;
+            request.url = url;
             
             if( sendViaPOST )
             {
@@ -115,7 +115,7 @@ package libraries.uanalytics.tracker.senders
                 request.method = URLRequestMethod.GET;
             }
             
-                request.data = payload;
+            request.data = payload;
             
             trace( "payload:" );
             trace( "--------" );
@@ -130,20 +130,20 @@ package libraries.uanalytics.tracker.senders
             }
             trace( "--------" );
             
-			const loader:URLLoader = new URLLoader();
-			
-			/* Note:
-			the Measurement Protocol Validation Server
-			returns data in JSON format, so we want TEXT
-			*/
-			loader.dataFormat = URLLoaderDataFormat.TEXT;
-			
+            const loader:URLLoader = new URLLoader();
+            
+            /* Note:
+            the Measurement Protocol Validation Server
+            returns data in JSON format, so we want TEXT
+            */
+            loader.dataFormat = URLLoaderDataFormat.TEXT;
+            
             _hookEvents(loader);
             var err:* = null;
             
             try
             {
-				loader.load( request );
+                loader.load( request );
             }
             catch( e:Error )
             {

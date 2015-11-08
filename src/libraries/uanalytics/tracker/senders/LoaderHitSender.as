@@ -170,11 +170,11 @@ package libraries.uanalytics.tracker.senders
          */
         protected function _hookEvents(loader:Loader):void
         {
-			loader.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError );
+            loader.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError );
             
-			loader.contentLoaderInfo.addEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
-			loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
-			loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onComplete );
+            loader.contentLoaderInfo.addEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
+            loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
+            loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onComplete );
         }
         
         /**
@@ -185,11 +185,11 @@ package libraries.uanalytics.tracker.senders
          */
         protected function _unhookEvents(loader:Loader):void
         {
-			loader.uncaughtErrorEvents.removeEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError );
+            loader.uncaughtErrorEvents.removeEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError );
             
-			loader.contentLoaderInfo.removeEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
-			loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
-			loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, onComplete );
+            loader.contentLoaderInfo.removeEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
+            loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
+            loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, onComplete );
         }
         
         /**
@@ -270,7 +270,7 @@ package libraries.uanalytics.tracker.senders
             /* Note:
                An error occured and so we want to unhook all our events
             */
-			const loaderInfo:LoaderInfo = event.target as LoaderInfo;
+            const loaderInfo:LoaderInfo = event.target as LoaderInfo;
             _unhookEvents(loaderInfo.loader);
             
             if( _tracker.config.enableErrorChecking )
@@ -291,7 +291,7 @@ package libraries.uanalytics.tracker.senders
             /* Note:
                We are done and so we want to unhook all our events
             */
-			const loaderInfo:LoaderInfo = event.target as LoaderInfo;
+            const loaderInfo:LoaderInfo = event.target as LoaderInfo;
             _unhookEvents(loaderInfo.loader);
         }
         
@@ -338,7 +338,7 @@ package libraries.uanalytics.tracker.senders
             
             // we build the request
             var request:URLRequest = new URLRequest();
-                request.url = url;
+            request.url = url;
             
             if( sendViaPOST )
             {
@@ -351,8 +351,8 @@ package libraries.uanalytics.tracker.senders
             
             request.data = payload;
             
-			const loader:Loader = new Loader();
-			
+            const loader:Loader = new Loader();
+            
             _hookEvents(loader);
             var err:* = null;
             
