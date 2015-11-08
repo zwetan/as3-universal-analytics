@@ -5,6 +5,7 @@
 package libraries.uanalytics.tracker.senders
 {
     import flash.display.Loader;
+    import flash.display.LoaderInfo;
     import flash.errors.IOError;
     import flash.errors.IllegalOperationError;
     import flash.events.ErrorEvent;
@@ -147,15 +148,6 @@ package libraries.uanalytics.tracker.senders
         protected var _tracker:AnalyticsTracker;
         
         /**
-         * A Loader.
-         * 
-         * @playerversion Flash 11
-         * @playerversion AIR 3.0
-         * @langversion 3.0
-         */
-        protected var _loader:Loader;
-        
-        /**
          * Creates a LoaderHitSender.
          * 
          * @param tracker an analytics tracker
@@ -168,7 +160,6 @@ package libraries.uanalytics.tracker.senders
         {
             super();
             _tracker = tracker;
-            _loader = new Loader();
         }
         
         /**
@@ -177,13 +168,13 @@ package libraries.uanalytics.tracker.senders
          * @playerversion AIR 3.0
          * @langversion 3.0
          */
-        protected function _hookEvents():void
+        protected function _hookEvents(loader:Loader):void
         {
-            _loader.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError );
+			loader.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError );
             
-            _loader.contentLoaderInfo.addEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
-            _loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
-            _loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onComplete );
+			loader.contentLoaderInfo.addEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
+			loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
+			loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onComplete );
         }
         
         /**
@@ -192,13 +183,13 @@ package libraries.uanalytics.tracker.senders
          * @playerversion AIR 3.0
          * @langversion 3.0
          */
-        protected function _unhookEvents():void
+        protected function _unhookEvents(loader:Loader):void
         {
-            _loader.uncaughtErrorEvents.removeEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError );
+			loader.uncaughtErrorEvents.removeEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError );
             
-            _loader.contentLoaderInfo.removeEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
-            _loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
-            _loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, onComplete );
+			loader.contentLoaderInfo.removeEventListener( HTTPStatusEvent.HTTP_STATUS, onHTTPStatus );
+			loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
+			loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, onComplete );
         }
         
         /**
@@ -212,7 +203,7 @@ package libraries.uanalytics.tracker.senders
             /* Note:
                An error occured and so we want to unhook all our events
             */
-            _unhookEvents();
+            _unhookEvents(event.target as Loader);
             
             var error:Error;
             
@@ -279,7 +270,8 @@ package libraries.uanalytics.tracker.senders
             /* Note:
                An error occured and so we want to unhook all our events
             */
-            _unhookEvents();
+			const loaderInfo:LoaderInfo = event.target as LoaderInfo;
+            _unhookEvents(loaderInfo.loader);
             
             if( _tracker.config.enableErrorChecking )
             {
@@ -299,7 +291,8 @@ package libraries.uanalytics.tracker.senders
             /* Note:
                We are done and so we want to unhook all our events
             */
-            _unhookEvents();
+			const loaderInfo:LoaderInfo = event.target as LoaderInfo;
+            _unhookEvents(loaderInfo.loader);
         }
         
         /** @inheritDoc */
@@ -356,9 +349,11 @@ package libraries.uanalytics.tracker.senders
                 request.method = URLRequestMethod.GET;
             }
             
-                request.data = payload;
+            request.data = payload;
             
-            _hookEvents();
+			const loader:Loader = new Loader();
+			
+            _hookEvents(loader);
             var err:* = null;
             
             /* Note:
@@ -372,32 +367,32 @@ package libraries.uanalytics.tracker.senders
             try
             {
                 // we send the request
-                _loader.load( request );
+				loader.load( request );
             }
             catch( e:IOError )
             {
-                _unhookEvents();
+                _unhookEvents(loader);
                 //trace( "unable to load requested page." );
                 //trace( "IOError: " + e.message );
                 err = e;
             }
             catch( e:SecurityError )
             {
-                _unhookEvents();
+                _unhookEvents(loader);
                 //trace( "unable to load requested page." );
                 //trace( "SecurityError: " + e.message );
                 err = e;
             }
             catch( e:IllegalOperationError )
             {
-                _unhookEvents();
+                _unhookEvents(loader);
                 //trace( "unable to load requested page." );
                 //trace( "IllegalOperationError: " + e.message );
                 err = e;
             }
             catch( e:Error )
             {
-                _unhookEvents();
+                _unhookEvents(loader);
                 //trace( "unable to load requested page." );
                 //trace( "Error: " + e.message );
                 err = e;
