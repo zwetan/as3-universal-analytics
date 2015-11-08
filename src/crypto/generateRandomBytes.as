@@ -4,9 +4,10 @@
 
 package crypto
 {
+    import flash.system.ApplicationDomain;
     import flash.utils.ByteArray;
     
-    import shell.Program;
+    //import shell.Program;
 
     /**
      * Generates a sequence of random bytes.
@@ -48,20 +49,41 @@ package crypto
             numberRandomBytes = 1024;
         }
         
-        var bytes:ByteArray = new ByteArray();
+        var get2bytes:Function;
         
-        var get2bytes:Function = function():uint
+        if (ApplicationDomain.currentDomain.hasDefinition("shell::Program"))
         {
-            /* Note:
-               This will only work under Linux and Mac OS X and only if
-               "/dev/urandom" is available.
-               We should test its presence and thorw an error if not found.
-            */
-            var str:String = Program.open( "LC_CTYPE=C tr -dc 'A-F0-9' < /dev/urandom | head -c 2" );
-            var b:uint = parseInt( "0x" + str );
-            return b;
+            const Program:Class = Class(ApplicationDomain.currentDomain.getDefinition("shell::Program"));
+            
+            get2bytes = function():uint
+            {
+                /* Note:
+                This will only work under Linux and Mac OS X and only if
+                "/dev/urandom" is available.
+                We should test its presence and thorw an error if not found.
+                */
+                var str:String = Program["open"]( "LC_CTYPE=C tr -dc 'A-F0-9' < /dev/urandom | head -c 2" );
+                var b:uint = parseInt( "0x" + str );
+                return b;
+            }
+        }
+        else if (ApplicationDomain.currentDomain.hasDefinition("flash.crypto::generateRandomBytes"))
+        {
+            // Flash player is > 11.0, this will use the more secure built in crypto  library.
+            import flash.crypto.generateRandomBytes;
+            return flash.crypto.generateRandomBytes(numberRandomBytes);
+        }
+        else
+        {
+            // For older Flash player versions (< 11.0) fallback to less secure random generator
+            get2bytes = function():uint
+            {
+                return Math.round(Math.random() * uint.MAX_VALUE) & 0xFF;
+            }
         }
         
+        
+        var bytes:ByteArray = new ByteArray();
         var i:uint;
         for( i = 0; i < numberRandomBytes; i++ )
         {
@@ -71,4 +93,5 @@ package crypto
         bytes.position = 0;
         return bytes;
     }
+    
 }

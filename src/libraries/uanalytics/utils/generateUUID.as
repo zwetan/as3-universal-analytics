@@ -1,7 +1,8 @@
 package libraries.uanalytics.utils
 {
-    import flash.crypto.generateRandomBytes;
     import flash.utils.ByteArray;
+    
+    import crypto.generateRandomBytes;
     
     /**
      * Generates a version 4 UUID string representation.
