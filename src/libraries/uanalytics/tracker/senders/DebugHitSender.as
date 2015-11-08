@@ -44,20 +44,16 @@ package libraries.uanalytics.tracker.senders
         public function DebugHitSender( tracker:AnalyticsTracker )
         {
             super( tracker );
-            
-            /* Note:
-               the Measurement Protocol Validation Server
-               returns data in JSON format, so we want TEXT
-            */
-            _loader.dataFormat = URLLoaderDataFormat.TEXT;
         }
         
         protected override function onComplete( event:Event ):void
         {
+			const loader:URLLoader = event.target as URLLoader;
+			
             trace( "onLoaderComplete()" );
-            _unhookEvents();
+            _unhookEvents(loader);
             
-            var raw:String = String( _loader.data );
+            var raw:String = String( loader.data );
             
             trace( "Measurement Protocol Validation Server:" );
             trace( "--------" );
@@ -134,16 +130,24 @@ package libraries.uanalytics.tracker.senders
             }
             trace( "--------" );
             
-            _hookEvents();
+			const loader:URLLoader = new URLLoader();
+			
+			/* Note:
+			the Measurement Protocol Validation Server
+			returns data in JSON format, so we want TEXT
+			*/
+			loader.dataFormat = URLLoaderDataFormat.TEXT;
+			
+            _hookEvents(loader);
             var err:* = null;
             
             try
             {
-                _loader.load( request );
+				loader.load( request );
             }
             catch( e:Error )
             {
-                _unhookEvents();
+                _unhookEvents(loader);
                 trace( "unable to load requested page." );
                 trace( "Error: " + e.message );
                 err = e;
